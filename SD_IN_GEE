@@ -1,0 +1,37 @@
+//Data Imports
+var SMAPL4 = ee.ImageCollection("NASA/SMAP/SPL4SMGP/008");
+
+//Study Area
+var roi = /* color: #98ff00 */ee.Geometry.Polygon(
+        [[[-88.11216260658114, 41.90564956606795],
+          [-88.11216260658114, 37.756926653859196],
+          [-84.53061963783114, 37.756926653859196],
+          [-84.53061963783114, 41.90564956606795]]], null, false);
+
+//Snow Depth Visualization Parameters
+var sdVis = {
+  min: 0.0,
+  max: 0.9,
+  palette: ['0300ff', '418504', 'efff07', 'efff07', 'ff0303'],
+};
+
+//Filter Date
+var startYear = 2022;
+var endYear = 2023;
+var startMonth = 9;
+var endMonth = 3;
+
+var startDate = ee.Date.fromYMD(startYear, startMonth, 1);
+var endDate = ee.Date.fromYMD(endYear, endMonth, 31);
+var years = ee.List.sequence(startYear, endYear);
+var months = ee.List.sequence(1, 12);
+
+//Average Snow Depth
+var snowDepth = SMAPL4.filterDate(startDate, endDate)
+                            .select(['snow_depth']);
+var sd22 = snowDepth.reduce(ee.Reducer.mean());
+
+//Export Raster
+Export.image(sd22.clip(roi));
+
+//Process was repeated three times for each study year (2022-25) due to file size limitation
