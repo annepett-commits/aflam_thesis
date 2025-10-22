@@ -1,3 +1,4 @@
+//Code meant for JavaScript Google Earth Engine Code Editor
 //Data Imports
 var SMAPL4 = ee.ImageCollection("NASA/SMAP/SPL4SMGP/008");
 
